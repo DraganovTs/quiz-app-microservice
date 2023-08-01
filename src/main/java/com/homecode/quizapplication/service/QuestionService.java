@@ -62,4 +62,8 @@ public class QuestionService {
             return new ResponseEntity<>("question is not added",HttpStatus.NOT_ACCEPTABLE);
         }
     }
+
+    public List<Question> findRandomQuestionsByCategory(String category) {
+        return null;
+    }
 }
