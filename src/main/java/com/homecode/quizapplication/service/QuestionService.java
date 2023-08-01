@@ -3,8 +3,11 @@ package com.homecode.quizapplication.service;
 import com.homecode.quizapplication.model.dto.QuestionAddDTO;
 import com.homecode.quizapplication.repository.QuestionRepository;
 import com.homecode.quizapplication.model.Question;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +19,12 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public ResponseEntity<List<Question>> getAllQuestions() {
+        try {
+            return new ResponseEntity<>(questionRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void saveAll(List<Question> generatedQuestions) {
@@ -28,11 +35,16 @@ public class QuestionService {
         return questionRepository.count() == 0;
     }
 
-    public List<Question> getQuestionByCategory(String category) {
-        return questionRepository.findAllByCategory(category);
+    public ResponseEntity<List<Question>> getQuestionByCategory(String category) {
+        try {
+            return new ResponseEntity<>(questionRepository.findAllByCategory(category), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public String addQuestion(QuestionAddDTO questionAddDTO) {
+    public ResponseEntity<String> addQuestion(QuestionAddDTO questionAddDTO) {
+
         Question questionToAdd = Question.builder()
                 .questionTitle(questionAddDTO.getQuestionTitle())
                 .rightAnswer(questionAddDTO.getRightAnswer())
@@ -45,9 +57,9 @@ public class QuestionService {
                 .build();
         try {
             questionRepository.save(questionToAdd);
-            return "question is added";
+            return new ResponseEntity<>("question is added",HttpStatus.CREATED);
         } catch (Exception e) {
-            return e.getMessage();
+            return new ResponseEntity<>("question is not added",HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }
