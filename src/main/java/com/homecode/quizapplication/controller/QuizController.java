@@ -1,5 +1,6 @@
 package com.homecode.quizapplication.controller;
 
+import com.homecode.quizapplication.model.Response;
 import com.homecode.quizapplication.model.dto.QuestionToClientDTO;
 import com.homecode.quizapplication.service.QuizService;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,12 @@ public class QuizController {
     @GetMapping("get/{id}")
     public ResponseEntity<List<QuestionToClientDTO>> getQuizQuestions(@PathVariable Integer id){
         return quizService.getQuizQuestions(id);
+    }
+
+    @PostMapping("submit/{id}")
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id,
+                                              @RequestBody List<Response> responseList){
+        return quizService.calculateResult(id,responseList);
+
     }
 }

@@ -2,6 +2,7 @@ package com.homecode.quizapplication.service;
 
 import com.homecode.quizapplication.model.Question;
 import com.homecode.quizapplication.model.Quiz;
+import com.homecode.quizapplication.model.Response;
 import com.homecode.quizapplication.model.dto.QuestionToClientDTO;
 import com.homecode.quizapplication.repository.QuizRepository;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,7 @@ public class QuizService {
 
     public ResponseEntity<List<QuestionToClientDTO>> getQuizQuestions(Integer id) {
 
-        Optional<Quiz> quiz = quizRepository.findById(id);
-        List<Question> questionsFromDB = quiz.get().getQuestions();
+        List<Question> questionsFromDB = getQuestions(id);
         List<QuestionToClientDTO> questionsDTOList = questionsFromDB
                 .stream()
                 .map(this::mapQuestionToDTO)
@@ -47,9 +47,35 @@ public class QuizService {
         return new ResponseEntity<>(questionsDTOList, HttpStatus.OK);
     }
 
+
+    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responseList) {
+        List<Question> questionsFromDB = getQuestions(id);
+        Integer correctAnswers = checkClientResult(questionsFromDB, responseList);
+
+
+        return new ResponseEntity<>(correctAnswers,HttpStatus.OK);
+    }
+
+    private Integer checkClientResult(List<Question> questionsFromDB, List<Response> responseList) {
+        Integer correctAnswer = 0;
+        for (int i = 0; i < questionsFromDB.size(); i++) {
+            if (questionsFromDB.get(i).getRightAnswer().equals(responseList.get(i).getAnswer())) {
+                correctAnswer++;
+            }
+        }
+
+        return correctAnswer;
+    }
+
+    private List<Question> getQuestions(Integer id) {
+        Optional<Quiz> quiz = quizRepository.findById(id);
+        return quiz.get().getQuestions();
+    }
+
     public QuestionToClientDTO mapQuestionToDTO(Question q) {
 
         return QuestionToClientDTO.builder()
+                .id(q.getId())
                 .questionTitle(q.getQuestionTitle())
                 .option1(q.getOption1())
                 .option2(q.getOption2())
@@ -57,4 +83,6 @@ public class QuizService {
                 .option4(q.getOption4())
                 .build();
     }
+
+
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class QuestionToClientDTO {
 
+    private Integer id;
     private String questionTitle;
     private String option1;
     private String option2;
