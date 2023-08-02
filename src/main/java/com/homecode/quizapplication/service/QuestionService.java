@@ -63,7 +63,7 @@ public class QuestionService {
         }
     }
 
-    public List<Question> findRandomQuestionsByCategory(String category) {
-        return null;
+    public List<Question> findRandomQuestionsByCategory(String category, int numQ) {
+        return questionRepository.findByCategoryAndNumQ(category,numQ);
     }
 }
