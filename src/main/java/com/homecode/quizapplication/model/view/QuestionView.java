@@ -1,30 +1,22 @@
-package com.homecode.quizapplication.model.dto;
-
+package com.homecode.quizapplication.model.view;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionAddDTO {
-    @NotEmpty
+@Builder
+public class QuestionView {
+    private Integer id;
     private String questionTitle;
-    @NotEmpty
     private String option1;
-    @NotEmpty
     private String option2;
-    @NotEmpty
     private String option3;
-    @NotEmpty
     private String option4;
-    @NotEmpty
     private String rightAnswer;
-    @NotEmpty
     private String difficultyLevel;
-    @NotEmpty
     private String category;
 }
